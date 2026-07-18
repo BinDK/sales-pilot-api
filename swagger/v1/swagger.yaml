@@ -14,6 +14,8 @@ paths:
       summary: Authenticate User
       tags:
       - Auth
+      description: Authenticates a user and returns a Bearer token. Use this token
+        in the Authorization header for subsequent requests.
       parameters: []
       responses:
         '200':
@@ -71,6 +73,7 @@ paths:
       summary: Create Company
       tags:
       - Companies
+      description: Super Admin only. Creates a new company (tenant) in the system.
       security:
       - bearer_auth: []
       parameters: []
@@ -104,9 +107,11 @@ paths:
                   - name
   "/api/v1/users":
     post:
-      summary: Create User (Sales/Admin)
+      summary: Create User
       tags:
       - Users
+      description: Creates a new user. Super Admins can create Admins. Admins can
+        create Sales users.
       security:
       - bearer_auth: []
       parameters: []
@@ -160,6 +165,8 @@ paths:
       summary: Verify LLM Models
       tags:
       - LLM Configuration
+      description: Admin only. Verifies the provided API key and returns a list of
+        available models from the provider.
       security:
       - bearer_auth: []
       parameters: []
@@ -199,6 +206,7 @@ paths:
       summary: Save LLM Configuration
       tags:
       - LLM Configuration
+      description: Admin only. Saves the API key and selected model for the company.
       security:
       - bearer_auth: []
       parameters: []
@@ -243,6 +251,8 @@ paths:
       summary: Sales Dashboard Summary
       tags:
       - Dashboard
+      description: Sales only. Retrieves the KPI summaries and AI daily summary for
+        the logged-in sales user.
       security:
       - bearer_auth: []
       responses:
@@ -257,7 +267,16 @@ paths:
                     type: array
                     items:
                       type: object
-                    example: []
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        period:
+                          type: string
+                          example: month
+                        amount:
+                          type: number
+                          example: 10000.0
                   todays_summary:
                     type: string
                     example: Placeholder summary
@@ -266,6 +285,8 @@ paths:
       summary: List Conversations
       tags:
       - Conversations
+      description: Sales only. Lists all customer conversations assigned to the user
+        or tenant.
       security:
       - bearer_auth: []
       responses:
@@ -301,6 +322,8 @@ paths:
       summary: Summarize Conversation
       tags:
       - Conversations
+      description: Sales only. Triggers the LLM to generate an AI summary for the
+        specific conversation.
       security:
       - bearer_auth: []
       parameters:
@@ -333,12 +356,37 @@ paths:
       summary: Create KPI
       tags:
       - KPIs
+      description: Admin only. Creates a KPI (Key Performance Indicator) target for
+        a specific sales user.
       security:
       - bearer_auth: []
       parameters: []
       responses:
         '201':
           description: created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  user_id:
+                    type: integer
+                    example: 2
+                  period:
+                    type: string
+                    example: month
+                  amount:
+                    type: number
+                    example: 10000.0
+                  start_date:
+                    type: string
+                    example: '2023-01-01'
+                  end_date:
+                    type: string
+                    example: '2023-01-31'
       requestBody:
         content:
           application/json:
@@ -359,35 +407,78 @@ paths:
                       example: 10000.0
                     start_date:
                       type: string
-                      example: '2023-01-01'
+                      example: '2026-01-01'
                     end_date:
                       type: string
-                      example: '2023-01-31'
+                      example: '2026-01-31'
   "/api/v1/orders":
     get:
       summary: List Orders
       tags:
       - Orders
+      description: Sales only. Lists all orders placed by customers in this tenant.
       security:
       - bearer_auth: []
       responses:
         '200':
           description: successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 101
+                    customer_id:
+                      type: integer
+                      example: 10
+                    user_id:
+                      type: integer
+                      example: 2
+                    total_amount:
+                      type: number
+                      example: 250.5
+                    status:
+                      type: string
+                      example: completed
   "/api/v1/todos":
     get:
       summary: List Todos
       tags:
       - Todos
+      description: Sales only. Lists all pending tasks ('Các việc cần làm') for the
+        logged-in user.
       security:
       - bearer_auth: []
       responses:
         '200':
           description: successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    title:
+                      type: string
+                      example: Follow up with Acme Corp
+                    is_completed:
+                      type: boolean
+                      example: false
   "/api/v1/customers/{id}/timeline":
     get:
       summary: Customer Timeline
       tags:
       - Customers
+      description: Sales only. Returns a historical timeline of events for a specific
+        customer.
       security:
       - bearer_auth: []
       parameters:
@@ -400,6 +491,26 @@ paths:
       responses:
         '200':
           description: successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    action:
+                      type: string
+                      example: called
+                    details:
+                      type: string
+                      example: Discussed Q3 pricing options
+                    created_at:
+                      type: string
+                      format: date-time
+                      example: '2026-10-01T12:00:00Z'
 servers:
 - url: https://{defaultHost}
   variables:
