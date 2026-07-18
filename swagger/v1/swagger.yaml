@@ -512,7 +512,4 @@ paths:
                       format: date-time
                       example: '2026-10-01T12:00:00Z'
 servers:
-- url: https://{defaultHost}
-  variables:
-    defaultHost:
-      default: www.example.com
+- url: https://sales-pilot-api.bindk.ovh

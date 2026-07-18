@@ -32,12 +32,7 @@ RSpec.configure do |config|
       paths: {},
       servers: [
         {
-          url: 'https://{defaultHost}',
-          variables: {
-            defaultHost: {
-              default: 'www.example.com'
-            }
-          }
+          url: ENV.fetch('BE_BASE_URL', 'https://sales-pilot-api.bindk.ovh')
         }
       ]
     }
