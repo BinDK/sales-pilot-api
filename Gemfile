@@ -51,3 +51,6 @@ end
 
 gem "acts_as_tenant", "~> 1.0"
 
+
+gem "rswag", "~> 2.17", groups: [:development, :test]
+gem "rspec-rails", "~> 8.0", groups: [:development, :test]

@@ -164,3 +164,17 @@ FOREIGN KEY ("company_id")
   [1m[35mSQL (1.0ms)[0m  [1m[35mSET search_path TO "$user", public /*application='Hackathon26'*/[0m
   [1m[35mSQL (1.0ms)[0m  [1m[35mSET search_path TO public /*application='Hackathon26'*/[0m
   [1m[35mSQL (1.7ms)[0m  [1m[35mSET search_path TO "$user", public /*application='Hackathon26'*/[0m
+Started GET "/api-docs" for 127.0.0.1 at 2026-07-18 13:52:42 +0700
+  [1m[36mActiveRecord::SchemaMigration Load (2.6ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='Hackathon26'*/[0m
+Started GET "/api-docs/index.html" for 127.0.0.1 at 2026-07-18 13:52:42 +0700
+Started GET "/api-docs/swagger-ui.css" for 127.0.0.1 at 2026-07-18 13:52:42 +0700
+Started GET "/api-docs/swagger-ui-bundle.js" for 127.0.0.1 at 2026-07-18 13:52:42 +0700
+Started GET "/api-docs/swagger-ui-standalone-preset.js" for 127.0.0.1 at 2026-07-18 13:52:42 +0700
+Started GET "/api-docs/favicon-32x32.png" for 127.0.0.1 at 2026-07-18 13:52:43 +0700
+Started GET "/api-docs/v1/swagger.yaml" for 127.0.0.1 at 2026-07-18 13:52:43 +0700
+Started GET "/api-docs/index.html" for 127.0.0.1 at 2026-07-18 13:55:35 +0700
+  [1m[36mActiveRecord::SchemaMigration Load (2.9ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='Hackathon26'*/[0m
+Started GET "/api-docs/swagger-ui-bundle.js" for 127.0.0.1 at 2026-07-18 13:55:35 +0700
+Started GET "/api-docs/swagger-ui-standalone-preset.js" for 127.0.0.1 at 2026-07-18 13:55:35 +0700
+Started GET "/api-docs/swagger-ui.css" for 127.0.0.1 at 2026-07-18 13:55:35 +0700
+Started GET "/api-docs/v1/swagger.yaml" for 127.0.0.1 at 2026-07-18 13:55:35 +0700

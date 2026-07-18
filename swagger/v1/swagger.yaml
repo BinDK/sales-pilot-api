@@ -1,0 +1,407 @@
+---
+openapi: 3.0.1
+info:
+  title: API V1
+  version: v1
+components:
+  securitySchemes:
+    bearer_auth:
+      type: http
+      scheme: bearer
+paths:
+  "/api/v1/login":
+    post:
+      summary: Authenticate User
+      tags:
+      - Auth
+      parameters: []
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: abc123token
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      email:
+                        type: string
+                        example: admin@company.com
+                      role:
+                        type: string
+                        example: admin
+                      company_id:
+                        type: integer
+                        example: 1
+        '401':
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Invalid email or password
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: admin@company.com
+                password:
+                  type: string
+                  example: password123
+              required:
+              - email
+              - password
+  "/api/v1/companies":
+    post:
+      summary: Create Company
+      tags:
+      - Companies
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '201':
+          description: created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  name:
+                    type: string
+                    example: Acme Corp
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                company:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      example: Acme Corp
+                  required:
+                  - name
+  "/api/v1/users":
+    post:
+      summary: Create User (Sales/Admin)
+      tags:
+      - Users
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '201':
+          description: created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 2
+                  email:
+                    type: string
+                    example: sales@acme.com
+                  role:
+                    type: string
+                    example: sales
+                  company_id:
+                    type: integer
+                    example: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: object
+                  properties:
+                    email:
+                      type: string
+                      example: sales@acme.com
+                    password:
+                      type: string
+                      example: password123
+                    role:
+                      type: string
+                      example: sales
+                    company_id:
+                      type: integer
+                      example: 1
+                  required:
+                  - email
+                  - password
+                  - role
+  "/api/v1/llm_configs/verify":
+    post:
+      summary: Verify LLM Models
+      tags:
+      - LLM Configuration
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  models:
+                    type: array
+                    items:
+                      type: string
+                    example:
+                    - gpt-4o
+                    - gpt-4-turbo
+                    - claude-3-opus
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                provider:
+                  type: string
+                  example: openai
+                api_key:
+                  type: string
+                  example: sk-...
+              required:
+              - provider
+              - api_key
+  "/api/v1/llm_configs":
+    post:
+      summary: Save LLM Configuration
+      tags:
+      - LLM Configuration
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '201':
+          description: created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  provider:
+                    type: string
+                    example: openai
+                  llm_model:
+                    type: string
+                    example: gpt-4o
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                provider:
+                  type: string
+                  example: openai
+                api_key:
+                  type: string
+                  example: sk-...
+                llm_model:
+                  type: string
+                  example: gpt-4o
+              required:
+              - provider
+              - api_key
+              - llm_model
+  "/api/v1/dashboard":
+    get:
+      summary: Sales Dashboard Summary
+      tags:
+      - Dashboard
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  kpis:
+                    type: array
+                    items:
+                      type: object
+                    example: []
+                  todays_summary:
+                    type: string
+                    example: Placeholder summary
+  "/api/v1/conversations":
+    get:
+      summary: List Conversations
+      tags:
+      - Conversations
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    customer_id:
+                      type: integer
+                      example: 10
+                    user_id:
+                      type: integer
+                      example: 2
+                    content:
+                      type: string
+                      example: Customer asked about pricing...
+                    ai_summary:
+                      type: string
+                      example: Pricing inquiry
+                    company_id:
+                      type: integer
+                      example: 1
+  "/api/v1/conversations/{id}/summarize":
+    post:
+      summary: Summarize Conversation
+      tags:
+      - Conversations
+      security:
+      - bearer_auth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Conversation ID
+        example: 1
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  content:
+                    type: string
+                    example: Customer asked about pricing...
+                  ai_summary:
+                    type: string
+                    example: AI generated summary of conversation ID 1
+  "/api/v1/kpis":
+    post:
+      summary: Create KPI
+      tags:
+      - KPIs
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '201':
+          description: created
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                kpi:
+                  type: object
+                  properties:
+                    user_id:
+                      type: integer
+                      example: 2
+                    period:
+                      type: string
+                      example: month
+                    amount:
+                      type: number
+                      example: 10000.0
+                    start_date:
+                      type: string
+                      example: '2023-01-01'
+                    end_date:
+                      type: string
+                      example: '2023-01-31'
+  "/api/v1/orders":
+    get:
+      summary: List Orders
+      tags:
+      - Orders
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: successful
+  "/api/v1/todos":
+    get:
+      summary: List Todos
+      tags:
+      - Todos
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: successful
+  "/api/v1/customers/{id}/timeline":
+    get:
+      summary: Customer Timeline
+      tags:
+      - Customers
+      security:
+      - bearer_auth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        example: 1
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: successful
+servers:
+- url: https://{defaultHost}
+  variables:
+    defaultHost:
+      default: www.example.com

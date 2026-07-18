@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  mount Rswag::Ui::Engine => '/api-docs'
+  mount Rswag::Api::Engine => '/api-docs'
   namespace :api do
     namespace :v1 do
       post 'login', to: 'auth#login'
@@ -8,6 +10,14 @@ Rails.application.routes.draw do
       
       resources :llm_configs, only: [:create] do
         post :verify, on: :collection
+      end
+      
+      resources :kpis, only: [:create]
+      resources :orders, only: [:index]
+      resources :todos, only: [:index]
+      
+      resources :customers, only: [] do
+        get :timeline, on: :member
       end
       
       get 'dashboard', to: 'dashboard#index'
